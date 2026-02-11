@@ -1,12 +1,14 @@
 import type { NextConfig } from "next";
 
+const isProd = process.env.NODE_ENV === "production";
+
 const nextConfig: NextConfig = {
-  output: 'export',
+  output: isProd ? "export" : undefined,
   images: {
     unoptimized: true,
   },
-  // For Electron: use relative paths
-  assetPrefix: './',
+  // For Electron: use relative paths in production only
+  assetPrefix: isProd ? "./" : undefined,
   trailingSlash: true,
 };
 
