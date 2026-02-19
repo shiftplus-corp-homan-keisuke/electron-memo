@@ -130,3 +130,7 @@
     overflow: hidden;
   }
 }
+
+button:hover {
+  cursor: pointer !important;
+}
