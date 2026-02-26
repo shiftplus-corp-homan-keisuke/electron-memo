@@ -40,7 +40,7 @@ export default function TitleBar() {
 
   return (
     <div
-      className="flex items-center justify-between h-8 bg-sidebar border-b select-none"
+      className="relative z-30 flex items-center justify-between h-8 bg-sidebar border-b select-none"
       style={{ WebkitAppRegion: "drag" } as React.CSSProperties}
     >
       {/* App title - draggable area */}
