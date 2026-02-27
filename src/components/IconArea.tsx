@@ -2,13 +2,12 @@
 
 import { Button } from './ui/button'
 import { Trash2, Settings, Plus } from 'lucide-react'
+import useNoteStore from '../stores/useNoteStore' // useNoteStoreをインポートする
+import { useRouter } from 'next/navigation'
 
 export default function IconArea() {
-
-    // TODO: 各ボタンのイベントハンドラを実装する
-    function handleAdd() {
-        console.log('Add')
-    }
+    const addNote = useNoteStore((state) => state.addNote);
+    const router = useRouter();
 
     function handleSettings() {
         console.log('Settings')
@@ -16,6 +15,11 @@ export default function IconArea() {
 
     function handleDelete() {
         console.log('Delete')
+    }
+
+    function handleAddNote() {
+        const newNoteId = addNote();
+        router.push(`/detail/${newNoteId}`);
     }
 
     return (
@@ -26,7 +30,7 @@ export default function IconArea() {
             <Button size="icon-sm" aria-label="Settings" variant="ghost" onClick={handleSettings}>
                 <Settings className="h-4 w-4" />
             </Button>
-            <Button size="icon-sm" aria-label="Add" variant="ghost" onClick={handleAdd}>
+            <Button size="icon-sm" aria-label="Add" variant="ghost" onClick={handleAddNote}>
                 <Plus className="h-4 w-4" />
             </Button>
         </div>
