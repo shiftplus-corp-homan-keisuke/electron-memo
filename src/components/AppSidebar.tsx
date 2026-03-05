@@ -24,6 +24,7 @@ export default function AppSidebar() {
   const notes = useNoteStore((state) => state.notes);
   const deleteNote = useNoteStore((state) => state.deleteNote);
   const restoreNote = useNoteStore((state) => state.restoreNote);
+  const togglePinNote = useNoteStore((state) => state.togglePinNote);
 
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [isShowingTrash, setIsShowingTrash] = useState(false);
@@ -41,7 +42,7 @@ export default function AppSidebar() {
   }
 
   function handleTogglePinNote(id: string) {
-    console.log("toggle pin note with id:", id);
+    togglePinNote(id);
   }
 
   function handleRestoreNote(id: string) {
@@ -86,6 +87,14 @@ export default function AppSidebar() {
                     </div>
                   </Link>
                 </SidebarMenuButton>
+                {(note.isPinned || hoverId === note.id) && (
+                  <SidebarMenuAction
+                    className="top-5!"
+                    onClick={() => handleTogglePinNote(note.id)}
+                  >
+                    <Pin stroke={note.isPinned ? '#cc0000' : 'currentColor'} /> <span className="sr-only">Add Pin</span>
+                  </SidebarMenuAction>
+                )}
                 {hoverId === note.id && (
                   <>
                     {isShowingTrash ? (
@@ -98,18 +107,13 @@ export default function AppSidebar() {
                       </SidebarMenuAction>
                     ) : (
                       <SidebarMenuAction
-                        className="top-5!"
-                        onClick={() => handleTogglePinNote(note.id)}
+                        className="right-8 top-5!"
+                        onClick={() => handleDeleteNote(note.id)}
                       >
                         <Trash2 /> <span className="sr-only">Delete Note</span>
                       </SidebarMenuAction>
                     )}
-                    <SidebarMenuAction
-                      className="right-8 top-5!"
-                      onClick={() => handleTogglePinNote(note.id)}
-                    >
-                      <Pin /> <span className="sr-only">Add Pin</span>
-                    </SidebarMenuAction>
+
                   </>
                 )}
               </SidebarMenuItem>

@@ -31,6 +31,7 @@ interface NoteStore {
   updateNote: (id: string, content: string) => void;
   deleteNote: (id: string) => void;
   restoreNote: (id: string) => void;
+  togglePinNote: (id: string) => void;
 }
 
 
@@ -97,6 +98,21 @@ const useNoteStore = create<NoteStore>()(
                     return {
                         ...note,
                         deletedAt: '',
+                    }
+                }
+                // idが違う場合はそのまま返す
+                return note; 
+            })
+        }))
+      },
+      togglePinNote: (id: string) => { 
+        set((state) => ({
+            notes: state.notes.map((note) => {
+                // idが一致するノートをピン留め
+                if (note.id === id) {
+                    return {
+                        ...note,
+                        isPinned: !note.isPinned,
                     }
                 }
                 // idが違う場合はそのまま返す
