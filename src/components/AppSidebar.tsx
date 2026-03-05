@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import IconArea from "./IconArea";
-import { Pin, Trash2 } from "lucide-react";
+import { ArchiveRestore, Pin, Trash2 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -22,8 +22,14 @@ import { formatDate } from "@/utils/utils";
 
 export default function AppSidebar() {
   const notes = useNoteStore((state) => state.notes);
+  const deleteNote = useNoteStore((state) => state.deleteNote);
+  const restoreNote = useNoteStore((state) => state.restoreNote);
 
   const [hoverId, setHoverId] = useState<string | null>(null);
+  const [isShowingTrash, setIsShowingTrash] = useState(false);
+
+  const activeNodes = notes.filter((note) => isShowingTrash ? note.deletedAt !== '' : note.deletedAt === '');
+
   const pathname = usePathname();
 
   const normalizePath = (path: string) =>
@@ -31,21 +37,25 @@ export default function AppSidebar() {
   const currentPath = normalizePath(pathname);
 
   function handleDeleteNote(id: string) {
-    console.log("delete note with id:", id);
+    deleteNote(id);
   }
 
   function handleTogglePinNote(id: string) {
     console.log("toggle pin note with id:", id);
   }
 
+  function handleRestoreNote(id: string) {
+    restoreNote(id);
+  }
+
   return (
     <Sidebar className="top-8">
       <SidebarHeader />
       <SidebarContent>
-        <IconArea />
-        <SidebarGroupLabel>Note List</SidebarGroupLabel>
+        <IconArea setIsShowingTrash={setIsShowingTrash} />
+        <SidebarGroupLabel>{isShowingTrash ? 'Trash' : 'Note List'}</SidebarGroupLabel>
         <SidebarMenu>
-          {notes.map((note) => {
+          {activeNodes.map((note) => {
             const noteHref = `/detail/${note.id}`;
             const isActive = currentPath === normalizePath(noteHref);
 
@@ -78,12 +88,22 @@ export default function AppSidebar() {
                 </SidebarMenuButton>
                 {hoverId === note.id && (
                   <>
-                    <SidebarMenuAction
-                      className="top-5!"
-                      onClick={() => handleDeleteNote(note.id)}
-                    >
-                      <Trash2 /> <span className="sr-only">Delete Note</span>
-                    </SidebarMenuAction>
+                    {isShowingTrash ? (
+                      <SidebarMenuAction
+                        className="top-5!"
+                        onClick={() => handleRestoreNote(note.id)}
+                      >
+                        <ArchiveRestore /> <span className="sr-only">Restore Note</span>
+
+                      </SidebarMenuAction>
+                    ) : (
+                      <SidebarMenuAction
+                        className="top-5!"
+                        onClick={() => handleTogglePinNote(note.id)}
+                      >
+                        <Trash2 /> <span className="sr-only">Delete Note</span>
+                      </SidebarMenuAction>
+                    )}
                     <SidebarMenuAction
                       className="right-8 top-5!"
                       onClick={() => handleTogglePinNote(note.id)}

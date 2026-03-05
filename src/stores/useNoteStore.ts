@@ -30,6 +30,7 @@ interface NoteStore {
   addNote: () => string;
   updateNote: (id: string, content: string) => void;
   deleteNote: (id: string) => void;
+  restoreNote: (id: string) => void;
 }
 
 
@@ -81,6 +82,21 @@ const useNoteStore = create<NoteStore>()(
                     return {
                         ...note,
                         deletedAt: new Date().toISOString(), 
+                    }
+                }
+                // idが違う場合はそのまま返す
+                return note; 
+            })
+        }))
+      },
+      restoreNote: (id: string) => { 
+        set((state) => ({
+            notes: state.notes.map((note) => {
+                // idが一致するノートを復元
+                if (note.id === id) {
+                    return {
+                        ...note,
+                        deletedAt: '',
                     }
                 }
                 // idが違う場合はそのまま返す

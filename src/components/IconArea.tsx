@@ -5,7 +5,11 @@ import { Trash2, Settings, Plus } from 'lucide-react'
 import useNoteStore from '../stores/useNoteStore' // useNoteStoreをインポートする
 import { useRouter } from 'next/navigation'
 
-export default function IconArea() {
+interface IconAreaProps {
+    setIsShowingTrash: (setIsShowingTrash: (state: boolean) => boolean) => void;
+}
+
+export default function IconArea({ setIsShowingTrash }: IconAreaProps) {
     const addNote = useNoteStore((state) => state.addNote);
     const router = useRouter();
 
@@ -13,8 +17,8 @@ export default function IconArea() {
         console.log('Settings')
     }
 
-    function handleDelete() {
-        console.log('Delete')
+    function handleToggleDelete() {
+        setIsShowingTrash((state) => !state);
     }
 
     function handleAddNote() {
@@ -24,7 +28,7 @@ export default function IconArea() {
 
     return (
         <div className="flex gap-2">
-            <Button size="icon-sm" aria-label="Delete" variant="ghost" onClick={handleDelete}>
+            <Button size="icon-sm" aria-label="Delete" variant="ghost" onClick={handleToggleDelete}>
                 <Trash2 className="h-4 w-4" />
             </Button>
             <Button size="icon-sm" aria-label="Settings" variant="ghost" onClick={handleSettings}>
