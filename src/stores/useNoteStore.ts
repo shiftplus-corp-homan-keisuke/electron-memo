@@ -1,5 +1,20 @@
-import {create} from 'zustand';
+import { create } from 'zustand';
+import { persist, createJSONStorage, StateStorage } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
+import { get, set as setIDB, del } from 'idb-keyval';
+
+// IndexedDBを使ったカスタムストレージ
+const storage: StateStorage = {
+  getItem: async (name: string): Promise<string | null> => {
+    return (await get(name)) || null;
+  },
+  setItem: async (name: string, value: string): Promise<void> => {
+    await setIDB(name, value);
+  },
+  removeItem: async (name: string): Promise<void> => {
+    await del(name);
+  },
+};
 
 interface Note {
   id: string;
@@ -18,59 +33,67 @@ interface NoteStore {
 }
 
 
-const useNoteStore = create<NoteStore>((set) => ({
-  notes: [],
-  addNote: () => {
-    const note: Note = {
-        id: uuidv4(),
-        content: '',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        deletedAt: '',
-        isPinned: false,
+const useNoteStore = create<NoteStore>()(
+  persist(
+    (set) => ({
+      notes: [],
+      addNote: () => {
+        const note: Note = {
+            id: uuidv4(),
+            content: '',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            deletedAt: '',
+            isPinned: false,
+        }
+
+        set((state) => ({
+            notes: [
+                ...state.notes,
+                note,
+            ],
+        }));
+        
+        return note.id;
+      },
+      updateNote: (id: string, content: string) => { 
+        set((state) => ({
+            notes: state.notes.map((note) => {
+                // idが一致するノートを更新
+                if (note.id === id) {
+                    return {
+                        ...note,
+                        content: content,
+                        updatedAt: new Date().toISOString(),
+                    }
+                }
+                // idが違う場合はそのまま返す
+                return note; 
+            })
+        }))
+
+      },    
+    　deleteNote: (id: string) => { 
+        set((state) => ({
+            notes: state.notes.map((note) => {
+                // idが一致するノートを削除
+                if (note.id === id) {
+                    return {
+                        ...note,
+                        deletedAt: new Date().toISOString(), 
+                    }
+                }
+                // idが違う場合はそのまま返す
+                return note; 
+            })
+        }))
+      },
+    }),
+    {
+      name: 'note-storage', // IndexedDBのキー名
+      storage: createJSONStorage(() => storage),
     }
-
-    set((state) => ({
-        notes: [
-            ...state.notes,
-            note,
-        ],
-    }));
-    
-    return note.id;
-  },
-  updateNote: (id: string, content: string) => { 
-    set((state) => ({
-        notes: state.notes.map((note) => {
-            // idが一致するノートを更新
-            if (note.id === id) {
-                return {
-                    ...note,
-                    content: content,
-                    updatedAt: new Date().toISOString(),
-                }
-            }
-            // idが違う場合はそのまま返す
-            return note; 
-        })
-    }))
-
-  },    
-　deleteNote: (id: string) => { 
-    set((state) => ({
-        notes: state.notes.map((note) => {
-            // idが一致するノートを削除
-            if (note.id === id) {
-                return {
-                    ...note,
-                    deletedAt: new Date().toISOString(), 
-                }
-            }
-            // idが違う場合はそのまま返す
-            return note; 
-        })
-    }))
-},
-}));
+  )
+);
 
 export default useNoteStore;

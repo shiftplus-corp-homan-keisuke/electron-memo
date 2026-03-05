@@ -3,7 +3,6 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
@@ -16,23 +15,14 @@ import { Pin, Trash2 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import useNoteStore from "@/stores/useNoteStore";
+import { formatDate } from "@/utils/utils";
 
-const notes = [
-  {
-    id: "id01",
-    content: "note01",
-    isPined: true,
-    updatedAt: "2025-01-01 12:00:00",
-  },
-  {
-    id: "id02",
-    content: "note02",
-    isPined: true,
-    updatedAt: "2025-01-02 12:00:00",
-  },
-];
+
 
 export default function AppSidebar() {
+  const notes = useNoteStore((state) => state.notes);
+
   const [hoverId, setHoverId] = useState<string | null>(null);
   const pathname = usePathname();
 
@@ -56,7 +46,7 @@ export default function AppSidebar() {
         <SidebarGroupLabel>Note List</SidebarGroupLabel>
         <SidebarMenu>
           {notes.map((note) => {
-            const noteHref = `/notes/${note.id}`;
+            const noteHref = `/detail/${note.id}`;
             const isActive = currentPath === normalizePath(noteHref);
 
             return (
@@ -73,7 +63,7 @@ export default function AppSidebar() {
                 >
                   <Link href={noteHref} className="w-full h-full">
                     <div className="flex flex-col gap-0">
-                      <span className="text-lg">{note.content}</span>
+                      <span className="text-lg">{note.content.substring(0, 10) || 'タイトルなし'}</span>
                       <span
                         className={
                           isActive
@@ -81,7 +71,7 @@ export default function AppSidebar() {
                             : "text-xs text-muted-foreground"
                         }
                       >
-                        {note.updatedAt}
+                        {formatDate(note.updatedAt)}
                       </span>
                     </div>
                   </Link>
