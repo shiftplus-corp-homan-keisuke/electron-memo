@@ -4,7 +4,7 @@ import "./globals.css";
 import AppSidebar from "@/components/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import TitleBar from "@/components/layout/TitleBar";
-import FontSizeManager from "@/components/FontSizeManager";
+import ShortcutManager from "@/components/FontSizeManager";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,13 +37,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${notoSansJP.variable} antialiased`}
       >
-        <FontSizeManager>
+        <ShortcutManager>
           <TitleBar />
           <SidebarProvider>
             <AppSidebar />
             <main className=" flex-1 min-w-0">{children}</main>
           </SidebarProvider>
-        </FontSizeManager>
+        </ShortcutManager>
       </body>
     </html>
   );
