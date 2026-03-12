@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import IconArea from "./IconArea";
-import { Pin, Trash2 } from "lucide-react";
+import { ArchiveRestore, Pin, Trash2 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -22,8 +22,15 @@ import { formatDate } from "@/utils/utils";
 
 export default function AppSidebar() {
   const notes = useNoteStore((state) => state.notes);
+  const deleteNote = useNoteStore((state) => state.deleteNote);
+  const restoreNote = useNoteStore((state) => state.restoreNote);
+  const togglePinNote = useNoteStore((state) => state.togglePinNote);
 
   const [hoverId, setHoverId] = useState<string | null>(null);
+  const [isShowingTrash, setIsShowingTrash] = useState(false);
+
+  const activeNodes = notes.filter((note) => isShowingTrash ? note.deletedAt !== '' : note.deletedAt === '');
+
   const pathname = usePathname();
 
   const normalizePath = (path: string) =>
@@ -31,21 +38,25 @@ export default function AppSidebar() {
   const currentPath = normalizePath(pathname);
 
   function handleDeleteNote(id: string) {
-    console.log("delete note with id:", id);
+    deleteNote(id);
   }
 
   function handleTogglePinNote(id: string) {
-    console.log("toggle pin note with id:", id);
+    togglePinNote(id);
+  }
+
+  function handleRestoreNote(id: string) {
+    restoreNote(id);
   }
 
   return (
     <Sidebar className="top-8">
       <SidebarHeader />
       <SidebarContent>
-        <IconArea />
-        <SidebarGroupLabel>Note List</SidebarGroupLabel>
+        <IconArea setIsShowingTrash={setIsShowingTrash} />
+        <SidebarGroupLabel>{isShowingTrash ? 'Trash' : 'Note List'}</SidebarGroupLabel>
         <SidebarMenu>
-          {notes.map((note) => {
+          {activeNodes.map((note) => {
             const noteHref = `/detail/${note.id}`;
             const isActive = currentPath === normalizePath(noteHref);
 
@@ -76,20 +87,33 @@ export default function AppSidebar() {
                     </div>
                   </Link>
                 </SidebarMenuButton>
+                {(note.isPinned || hoverId === note.id) && (
+                  <SidebarMenuAction
+                    className="top-5!"
+                    onClick={() => handleTogglePinNote(note.id)}
+                  >
+                    <Pin stroke={note.isPinned ? '#cc0000' : 'currentColor'} /> <span className="sr-only">Add Pin</span>
+                  </SidebarMenuAction>
+                )}
                 {hoverId === note.id && (
                   <>
-                    <SidebarMenuAction
-                      className="top-5!"
-                      onClick={() => handleDeleteNote(note.id)}
-                    >
-                      <Trash2 /> <span className="sr-only">Delete Note</span>
-                    </SidebarMenuAction>
-                    <SidebarMenuAction
-                      className="right-8 top-5!"
-                      onClick={() => handleTogglePinNote(note.id)}
-                    >
-                      <Pin /> <span className="sr-only">Add Pin</span>
-                    </SidebarMenuAction>
+                    {isShowingTrash ? (
+                      <SidebarMenuAction
+                        className="top-5!"
+                        onClick={() => handleRestoreNote(note.id)}
+                      >
+                        <ArchiveRestore /> <span className="sr-only">Restore Note</span>
+
+                      </SidebarMenuAction>
+                    ) : (
+                      <SidebarMenuAction
+                        className="right-8 top-5!"
+                        onClick={() => handleDeleteNote(note.id)}
+                      >
+                        <Trash2 /> <span className="sr-only">Delete Note</span>
+                      </SidebarMenuAction>
+                    )}
+
                   </>
                 )}
               </SidebarMenuItem>
