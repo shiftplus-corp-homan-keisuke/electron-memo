@@ -17,6 +17,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useNoteStore from "@/stores/useNoteStore";
 import { formatDate } from "@/utils/utils";
+import Search from "./Search";
 
 
 
@@ -54,6 +55,7 @@ export default function AppSidebar() {
       <SidebarHeader />
       <SidebarContent>
         <IconArea setIsShowingTrash={setIsShowingTrash} />
+        <Search />
         <SidebarGroupLabel>{isShowingTrash ? 'Trash' : 'Note List'}</SidebarGroupLabel>
         <SidebarMenu>
           {activeNodes.map((note) => {
