@@ -26,9 +26,9 @@ export default function AppSidebar() {
   const deleteNote = useNoteStore((state) => state.deleteNote);
   const restoreNote = useNoteStore((state) => state.restoreNote);
   const togglePinNote = useNoteStore((state) => state.togglePinNote);
+  const isShowingTrash = useNoteStore((state) => state.isShowingTrash);
 
   const [hoverId, setHoverId] = useState<string | null>(null);
-  const [isShowingTrash, setIsShowingTrash] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const activeNodes = notes.filter((note) => {
@@ -68,7 +68,7 @@ export default function AppSidebar() {
     <Sidebar className="top-8">
       <SidebarHeader />
       <SidebarContent>
-        <IconArea isShowingTrash={isShowingTrash} setIsShowingTrash={setIsShowingTrash} />
+        <IconArea />
         <Search handleSearch={handleSearch} />
         <SidebarGroupLabel>{isShowingTrash ? 'Trash' : 'Note List'} {searchQuery ? ` + Search` : ""}</SidebarGroupLabel>
         <SidebarMenu>

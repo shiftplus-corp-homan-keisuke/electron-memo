@@ -8,11 +8,13 @@ import { useEffect } from 'react';
 export default function ShortcutManager({children}: { children: React.ReactNode }) {
 const { fontSize, increase, decrease } = useFontSizeStore();
 const addNote = useNoteStore((state) => state.addNote);
+const setIsShowingTrash = useNoteStore((state) => state.setIsShowingTrash);
 const router = useRouter();
 
 function handleAddNote() {
     const newNoteId = addNote();
     router.push(`/detail/${newNoteId}`);
+    setIsShowingTrash(false);
 }
 
 // フォントサイズが変わるたびにhtmlのfont-sizeを更新（remの基準値）

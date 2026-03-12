@@ -5,13 +5,10 @@ import { Trash2, Settings, Plus, NotebookIcon } from 'lucide-react'
 import useNoteStore from '../stores/useNoteStore' // useNoteStoreをインポートする
 import { useRouter } from 'next/navigation'
 
-interface IconAreaProps {
-    isShowingTrash: boolean;
-    setIsShowingTrash: (setIsShowingTrash: (state: boolean) => boolean) => void;
-}
-
-export default function IconArea({ isShowingTrash, setIsShowingTrash }: IconAreaProps) {
+export default function IconArea() {
     const addNote = useNoteStore((state) => state.addNote);
+    const isShowingTrash = useNoteStore((state) => state.isShowingTrash);
+    const setIsShowingTrash = useNoteStore((state) => state.setIsShowingTrash);
     const router = useRouter();
 
 
@@ -22,6 +19,7 @@ export default function IconArea({ isShowingTrash, setIsShowingTrash }: IconArea
     function handleAddNote() {
         const newNoteId = addNote();
         router.push(`/detail/${newNoteId}`);
+        setIsShowingTrash(() => false);
     }
 
     return (
