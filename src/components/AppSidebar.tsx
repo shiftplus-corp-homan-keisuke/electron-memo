@@ -14,7 +14,7 @@ import IconArea from "./IconArea";
 import { ArchiveRestore, Pin, Trash2 } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import useNoteStore from "@/stores/useNoteStore";
 import { formatDate } from "@/utils/utils";
 import Search from "./Search";
@@ -42,11 +42,8 @@ export default function AppSidebar() {
     }
   });
 
-  const pathname = usePathname();
-
-  const normalizePath = (path: string) =>
-    path !== "/" && path.endsWith("/") ? path.slice(0, -1) : path;
-  const currentPath = normalizePath(pathname);
+  const searchParams = useSearchParams();
+  const currentId = searchParams.get('id');
 
   function handleDeleteNote(id: string) {
     deleteNote(id);
@@ -78,8 +75,8 @@ export default function AppSidebar() {
             </SidebarMenuItem>
           )}
           {activeNodes.map((note) => {
-            const noteHref = `/detail/${note.id}`;
-            const isActive = currentPath === normalizePath(noteHref);
+            const noteHref = `/?id=${note.id}`;
+            const isActive = currentId === note.id;
 
             return (
               <SidebarMenuItem

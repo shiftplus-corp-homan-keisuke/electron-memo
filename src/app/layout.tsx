@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import AppSidebar from "@/components/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { Suspense } from "react";
 import TitleBar from "@/components/layout/TitleBar";
 import ShortcutManager from "@/components/ShortcutManager";
 
@@ -41,7 +42,9 @@ export default function RootLayout({
         <ShortcutManager>
           <TitleBar />
           <SidebarProvider>
-            <AppSidebar />
+            <Suspense fallback={<div>Loading Sidebar...</div>}>
+              <AppSidebar />
+            </Suspense>
             <main className=" flex-1 min-w-0">{children}</main>
           </SidebarProvider>
         </ShortcutManager>
