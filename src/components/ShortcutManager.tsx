@@ -13,7 +13,7 @@ const router = useRouter();
 
 function handleAddNote() {
     const newNoteId = addNote();
-    router.push(`/detail/${newNoteId}`);
+    router.push(`/?id=${newNoteId}`);
     setIsShowingTrash(false);
 }
 
