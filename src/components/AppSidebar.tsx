@@ -29,8 +29,18 @@ export default function AppSidebar() {
 
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [isShowingTrash, setIsShowingTrash] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const activeNodes = notes.filter((note) => isShowingTrash ? note.deletedAt !== '' : note.deletedAt === '');
+  const activeNodes = notes.filter((note) => {
+    // 検索はゴミ箱を見ているときは削除済みから検索、そうじゃないときは通常から検索
+    if (searchQuery) {
+      return isShowingTrash ?
+        note.deletedAt !== '' && note.content.toLowerCase().includes(searchQuery.toLowerCase()) :
+        note.deletedAt === '' && note.content.toLowerCase().includes(searchQuery.toLowerCase())
+    } else {
+      return isShowingTrash ? note.deletedAt !== '' : note.deletedAt === ''
+    }
+  });
 
   const pathname = usePathname();
 
@@ -50,14 +60,23 @@ export default function AppSidebar() {
     restoreNote(id);
   }
 
+  function handleSearch(query: string) {
+    setSearchQuery(query);
+  }
+
   return (
     <Sidebar className="top-8">
       <SidebarHeader />
       <SidebarContent>
-        <IconArea setIsShowingTrash={setIsShowingTrash} />
-        <Search />
-        <SidebarGroupLabel>{isShowingTrash ? 'Trash' : 'Note List'}</SidebarGroupLabel>
+        <IconArea isShowingTrash={isShowingTrash} setIsShowingTrash={setIsShowingTrash} />
+        <Search handleSearch={handleSearch} />
+        <SidebarGroupLabel>{isShowingTrash ? 'Trash' : 'Note List'} {searchQuery ? ` + Search` : ""}</SidebarGroupLabel>
         <SidebarMenu>
+          {activeNodes.length === 0 && (
+            <SidebarMenuItem>
+              <span className="text-sm p-2">ノートがありません</span>
+            </SidebarMenuItem>
+          )}
           {activeNodes.map((note) => {
             const noteHref = `/detail/${note.id}`;
             const isActive = currentPath === normalizePath(noteHref);
