@@ -4,7 +4,7 @@ import "./globals.css";
 import AppSidebar from "@/components/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import TitleBar from "@/components/layout/TitleBar";
-import ShortcutManager from "@/components/FontSizeManager";
+import ShortcutManager from "@/components/ShortcutManager";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
