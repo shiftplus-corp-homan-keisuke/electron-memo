@@ -1,9 +1,9 @@
-import NoteEditorComponent from "@/components/NoteEditorComponent";
+import NoteEditor from "@/components/NoteEditor";
 
 export default function Home() {
   return (
     <>
-      <NoteEditorComponent />
+      <NoteEditor />
     </>
   );
 }

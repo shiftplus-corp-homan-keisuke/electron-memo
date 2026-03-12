@@ -1,22 +1,8 @@
 "use client";
 
-import useNoteStore from '@/stores/useNoteStore';
-import { useParams } from 'next/navigation';
-import React from 'react'
+import React from 'react';
+import NoteEditor from '@/components/NoteEditor';
 
 export default function page() {
-  const { id } = useParams();
-  // idに一致するノートを取得
-  const note = useNoteStore((state) => 
-    state.notes.find((note) => note.id === id)
-  );
-
-  if (!note) {
-    return(
-        <div>ノートが見つかりません</div>
-    )
-  }
-  return (
-    <textarea className="w-full h-full p-4 resize-none" defaultValue={note.content}></textarea>
-  )
+  return <NoteEditor />;
 }
