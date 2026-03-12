@@ -1,10 +1,19 @@
 "use client"
 
 import useFontSizeStore from '@/stores/useFontSizeStore';
+import useNoteStore from '@/stores/useNoteStore';
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-export default function FontSizeManager({children}: { children: React.ReactNode }) {
+export default function ShortcutManager({children}: { children: React.ReactNode }) {
 const { fontSize, increase, decrease } = useFontSizeStore();
+const addNote = useNoteStore((state) => state.addNote);
+const router = useRouter();
+
+function handleAddNote() {
+    const newNoteId = addNote();
+    router.push(`/detail/${newNoteId}`);
+}
 
 // フォントサイズが変わるたびにhtmlのfont-sizeを更新（remの基準値）
 useEffect(() => {
@@ -24,6 +33,10 @@ useEffect(() => {
         } else if (e.code === 'Minus') { 
             e.preventDefault();
             decrease();
+        // ctrl + N で新規ノート作成
+        } else if (e.code === 'KeyN') {
+            e.preventDefault();
+            handleAddNote();
         }
     };
 
@@ -31,7 +44,7 @@ useEffect(() => {
     return () => {
         window.removeEventListener('keydown', handleKeyDown);
     };
-}, [increase, decrease]);
+}, [increase, decrease, handleAddNote]);
 
   return (
     <>{children}</>

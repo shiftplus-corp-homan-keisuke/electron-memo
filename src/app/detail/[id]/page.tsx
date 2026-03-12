@@ -17,6 +17,6 @@ export default function page() {
     )
   }
   return (
-    <textarea defaultValue={note.content}></textarea>
+    <textarea className="w-full h-full p-4 resize-none" defaultValue={note.content}></textarea>
   )
 }
