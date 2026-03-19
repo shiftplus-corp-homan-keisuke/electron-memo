@@ -66,7 +66,7 @@ export default function AppSidebar() {
       <SidebarHeader />
       <SidebarContent>
         <IconArea />
-        <Search handleSearch={handleSearch} />
+        <Search handleSearch={handleSearch} searchQuery={searchQuery}/>
         <SidebarGroupLabel>{isShowingTrash ? 'Trash' : 'Note List'} {searchQuery ? ` + Search` : ""}</SidebarGroupLabel>
         <SidebarMenu>
           {activeNodes.length === 0 && (

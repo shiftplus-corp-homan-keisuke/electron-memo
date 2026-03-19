@@ -39,6 +39,13 @@ useEffect(() => {
         } else if (e.code === 'KeyN') {
             e.preventDefault();
             handleAddNote();
+        // ctrf + F で検索にフォーカス
+        } else if (e.code === 'KeyF') {
+            e.preventDefault();
+            const searchInput = document.getElementById('input-group-url') as HTMLInputElement | null;
+            if (searchInput) {
+                searchInput.focus();
+            }
         }
     };
 

@@ -134,3 +134,33 @@
 button:hover {
   cursor: pointer !important;
 }
+
+/* Sidebar scrollbar */
+[data-sidebar="content"] {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.2s ease;
+}
+
+[data-sidebar="content"]:hover {
+  scrollbar-color: hsl(0 0% 70% / 0.5) transparent;
+}
+
+[data-sidebar="content"]::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+[data-sidebar="content"]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-sidebar="content"]::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 9999px;
+}
+
+[data-sidebar="content"]:hover::-webkit-scrollbar-thumb {
+  background-color: hsl(0 0% 70% / 0.5);
+}
+
