@@ -23,7 +23,7 @@ export default function IconArea() {
     }
 
     return (
-        <div className="flex gap-2">
+        <div className="flex gap-2 px-2">
             <Button size="icon-sm" aria-label="Delete" variant="ghost" onClick={handleToggleDelete}>
                 {isShowingTrash ? <Trash2 className="h-4 w-4" /> : <NotebookIcon className="h-4 w-4" />}
             </Button>
