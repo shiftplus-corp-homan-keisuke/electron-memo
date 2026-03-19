@@ -9,7 +9,7 @@ interface SearchProps {
 
 export default function Search({ handleSearch, searchQuery }: SearchProps) {
   return (
-    <Field className='p-2'>
+    <Field className='p-2 px-4'>
       <InputGroup className='shadow-none'>
         <InputGroupInput id="input-group-url" placeholder="検索..." value={searchQuery} onChange={(e) => handleSearch(e.target.value)} />
         <InputGroupAddon align="inline-start">
