@@ -1,5 +1,5 @@
 {
-  "name": "lumina",
+  "name": "Usagi",
   "version": "0.1.0",
   "private": true,
   "main": "electron/main.js",
@@ -13,7 +13,7 @@
   },
   "build": {
     "appId": "com.lumina.note",
-    "productName": "Lumina",
+    "productName": "Usagi",
     "directories": {
       "output": "dist"
     },
@@ -25,7 +25,8 @@
       "target": "dmg"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "public/icon.png"
     },
     "linux": {
       "target": "AppImage"
