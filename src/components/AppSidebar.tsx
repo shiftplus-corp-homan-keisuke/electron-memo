@@ -40,6 +40,13 @@ export default function AppSidebar() {
     } else {
       return isShowingTrash ? note.deletedAt !== '' : note.deletedAt === ''
     }
+  }).sort((a, b) => {
+    // isPinnedがtrueのものを優先
+    if (a.isPinned && !b.isPinned) return -1;
+    if (!a.isPinned && b.isPinned) return 1;
+
+    // updatedAtの降順（新しいものが上）
+    return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
   });
 
   const searchParams = useSearchParams();
@@ -64,14 +71,14 @@ export default function AppSidebar() {
   return (
     <Sidebar className="top-8">
       <SidebarHeader />
-      <SidebarContent>
+      <SidebarContent className="">
         <IconArea />
         <Search handleSearch={handleSearch} />
-        <SidebarGroupLabel>{isShowingTrash ? 'Trash' : 'Note List'} {searchQuery ? ` + Search` : ""}</SidebarGroupLabel>
+        <SidebarGroupLabel className="px-4">{isShowingTrash ? 'Trash' : 'Note List'} {searchQuery ? ` + Search` : ""}</SidebarGroupLabel>
         <SidebarMenu>
           {activeNodes.length === 0 && (
             <SidebarMenuItem>
-              <span className="text-sm p-2">ノートがありません</span>
+              <span className="text-sm p-4">ノートがありません</span>
             </SidebarMenuItem>
           )}
           {activeNodes.map((note) => {
@@ -88,7 +95,7 @@ export default function AppSidebar() {
                 <SidebarMenuButton
                   asChild
                   isActive={isActive}
-                  className="h-14 group-hover/menu-item:bg-sidebar-accent group-hover/menu-item:text-sidebar-accent-foreground"
+                  className="h-14 group-hover/menu-item:bg-sidebar-accent group-hover/menu-item:text-sidebar-accent-foreground px-4"
                 >
                   <Link href={noteHref} className="w-full h-full">
                     <div className="flex flex-col gap-0">
@@ -105,19 +112,19 @@ export default function AppSidebar() {
                     </div>
                   </Link>
                 </SidebarMenuButton>
-                {(note.isPinned || hoverId === note.id) && (
+                {(note.isPinned || hoverId === note.id && !isShowingTrash) && (
                   <SidebarMenuAction
-                    className="top-5!"
+                    className="top-5! right-2"
                     onClick={() => handleTogglePinNote(note.id)}
                   >
-                    <Pin stroke={note.isPinned ? '#cc0000' : 'currentColor'} /> <span className="sr-only">Add Pin</span>
+                    <Pin stroke={note.isPinned ? 'hsl(0 0% 9%)' : 'currentColor'} fill={note.isPinned ? 'hsl(320 0% 85%)' : 'none'} /> <span className="sr-only">Add Pin</span>
                   </SidebarMenuAction>
                 )}
                 {hoverId === note.id && (
                   <>
                     {isShowingTrash ? (
                       <SidebarMenuAction
-                        className="top-5!"
+                        className="top-5! right-2"
                         onClick={() => handleRestoreNote(note.id)}
                       >
                         <ArchiveRestore /> <span className="sr-only">Restore Note</span>
@@ -125,7 +132,7 @@ export default function AppSidebar() {
                       </SidebarMenuAction>
                     ) : (
                       <SidebarMenuAction
-                        className="right-8 top-5!"
+                        className="right-10 top-5!"
                         onClick={() => handleDeleteNote(note.id)}
                       >
                         <Trash2 /> <span className="sr-only">Delete Note</span>
