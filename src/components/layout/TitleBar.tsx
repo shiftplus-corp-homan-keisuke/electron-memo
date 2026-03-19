@@ -1,6 +1,6 @@
 "use client";
 
-import { Minus, Square, X, Maximize2 } from "lucide-react";
+import { Minus, Square, X, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 
@@ -55,16 +55,16 @@ export default function TitleBar() {
       >
         <Button
           variant="ghost"
-          size="icon"
-          className="h-8 w-10 rounded-none hover:bg-muted"
+          size="icon-xs"
+          className="h-8 w-10 rounded-none hover:bg-border"
           onClick={() => window.electronAPI?.minimizeWindow()}
         >
-          <Minus className="h-4 w-4" />
+          <Minus className="h-2 w-2" />
         </Button>
         <Button
           variant="ghost"
-          size="icon"
-          className="h-8 w-10 rounded-none hover:bg-muted"
+          size="icon-xs"
+          className="h-8 w-10 rounded-none hover:bg-border"
           onClick={async () => {
             window.electronAPI?.maximizeWindow();
             // Immediately update state after action
@@ -77,18 +77,18 @@ export default function TitleBar() {
           }}
         >
           {isMaximized ? (
-            <Square className="h-3.5 w-3.5" />
+            <Copy className="h-2 w-2" />
           ) : (
-            <Maximize2 className="h-3.5 w-3.5" />
+            <Square className="h-2 w-2" />
           )}
         </Button>
         <Button
           variant="ghost"
-          size="icon"
-          className="h-8 w-10 rounded-none hover:bg-destructive hover:text-destructive-foreground"
+          size="icon-xs"
+          className="h-8 w-10 rounded-none hover:bg-destructive hover:text-white"
           onClick={() => window.electronAPI?.closeWindow()}
         >
-          <X className="h-4 w-4" />
+          <X className="h-2 w-2" />
         </Button>
       </div>
     </div>
